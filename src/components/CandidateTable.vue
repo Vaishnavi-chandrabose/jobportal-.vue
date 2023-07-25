@@ -11,7 +11,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="(candidate, index) in candidates" :key="index">
+      <tr v-for="(candidate, index) in candidates" :key="candidate.id">
         <td>{{ candidate.name }}</td>
         <td>{{ candidate.position }}</td>
         <td>{{ candidate.gender }}</td>
@@ -19,15 +19,20 @@
         <td>{{ candidate.experience }}</td>
         <td>
           <DeleteCandidateButton @deleteCandidate="deleteCandidate(index)" />
+           <button @click="showEditModal(candidate, index)">Edit</button>
         </td>
       </tr>
     </tbody>
   </table>
+  
 </template>
+
+
+
 
 <script>
 import DeleteCandidateButton from './DeleteCandidateButton.vue';
-
+import EditCandidate from'./EditCandidate.vue';
 export default {
   props: {
     candidates: {
@@ -37,11 +42,16 @@ export default {
   },
   components: {
     DeleteCandidateButton,
+    EditCandidate,
   },
   methods: {
     deleteCandidate(index) {
       this.$emit('deleteCandidate', index);
     },
+     showEditModal(candidateData, index) {
+      this.$emit('openEditCandidateModal', candidateData, index);
+    },
+    
   },
 };
 </script>

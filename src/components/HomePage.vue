@@ -1,14 +1,19 @@
 <template>
   <div>
     <h1>Home Page</h1>
-    <CandidateTable :candidates="candidates" @deleteCandidate="deleteCandidate" />
+    <CandidateTable :candidates="candidates" @deleteCandidate="deleteCandidate" @openEditCandidateModal="openEditCandidateModal" />
     <button @click="showAddCandidateModal = true">Add Candidate</button>
 
-    <!-- Modal -->
     <div v-if="showAddCandidateModal" class="modal">
       <div class="modal-content">
         <h2>Add Candidate</h2>
         <AddCandidateForm @addCandidate="addCandidate" @closeModal="closeAddCandidateModal" />
+      </div>
+    </div>
+
+    <div v-if="showEditCandidateModal" class="modal">
+      <div class="modal-content">
+        <EditCandidate :candidateData="JSON.parse(JSON.stringify(selectedCandidateData))" @updateCandidate="updateCandidateRow" @closeModal="closeEditCandidateModal" />
       </div>
     </div>
   </div>
@@ -17,17 +22,21 @@
 <script>
 import CandidateTable from '../components/CandidateTable.vue';
 import AddCandidateForm from '../components/AddCandidateForm.vue';
+import EditCandidate from '../components/EditCandidate.vue';
 
 export default {
   data() {
     return {
       candidates: JSON.parse(localStorage.getItem('candidates') || '[]'),
-      showAddCandidateModal: false, 
+      showAddCandidateModal: false,
+      showEditCandidateModal: false,
+      selectedCandidateData: null,
     };
   },
   components: {
     CandidateTable,
     AddCandidateForm,
+    EditCandidate,
   },
   methods: {
     addCandidate(newCandidate) {
@@ -38,15 +47,37 @@ export default {
       this.candidates.splice(index, 1);
       this.saveCandidatesToLocalStorage();
     },
+    
+     updateCandidateRow(updatedCandidate) {
+      const index = this.candidates.findIndex((candidate) => candidate.id === updatedCandidate.id);
+      if (index !== -1) {
+        this.candidates[index] = updatedCandidate;
+        this.saveCandidatesToLocalStorage();
+      }
+    },
     saveCandidatesToLocalStorage() {
       localStorage.setItem('candidates', JSON.stringify(this.candidates));
     },
     closeAddCandidateModal() {
-      this.showAddCandidateModal = false; 
+      this.showAddCandidateModal = false;
+    },
+   
+  openEditCandidateModal(candidateData) {
+    this.selectedCandidateData = JSON.parse(JSON.stringify(candidateData)); // Create a copy
+    this.showEditCandidateModal = true;
+  },
+    closeEditCandidateModal() {
+      this.showEditCandidateModal = false;
+      this.selectedCandidateData = null;
     },
   },
 };
 </script>
+
+<style>
+/* Your CSS styles... */
+</style>
+
 
 
 <style>
