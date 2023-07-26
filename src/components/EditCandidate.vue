@@ -1,13 +1,12 @@
-
 <template>
   <div>
     <h2>Edit Candidate</h2>
     <form @submit.prevent="updateCandidate">
+      <!-- form content -->
       <label for="name">Enter your Name:</label>
       <input v-model="candidate.name" type="text" id="name" placeholder="Name">
       <br>
-
-      <label for="position">Select your Position:</label>
+ <label for="position">Select your Position:</label>
       <select v-model="candidate.position" id="position">
         <option value="Software Engineer">Software Engineer</option>
         <option value="FrontEnd Developer">FrontEnd Developer</option>
@@ -51,9 +50,7 @@ export default {
   },
   methods: {
     updateCandidate() {
-    
-      this.$emit('updateCandidate', this.candidate);
-      this.closeModal();
+      this.$emit('updateCandidate', { ...this.candidate });
     },
     closeModal() {
       this.$emit('closeModal');

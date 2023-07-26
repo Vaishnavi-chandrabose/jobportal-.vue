@@ -4,6 +4,7 @@
     <CandidateTable :candidates="candidates" @deleteCandidate="deleteCandidate" @openEditCandidateModal="openEditCandidateModal" />
     <button @click="showAddCandidateModal = true">Add Candidate</button>
 
+    <!-- Add Candidate Modal -->
     <div v-if="showAddCandidateModal" class="modal">
       <div class="modal-content">
         <h2>Add Candidate</h2>
@@ -11,9 +12,10 @@
       </div>
     </div>
 
+    <!-- Edit Candidate Modal -->
     <div v-if="showEditCandidateModal" class="modal">
       <div class="modal-content">
-        <EditCandidate :candidateData="JSON.parse(JSON.stringify(selectedCandidateData))" @updateCandidate="updateCandidateRow" @closeModal="closeEditCandidateModal" />
+        <EditCandidate :candidateData="selectedCandidateData" :key="selectedCandidateData.id" @updateCandidate="updateCandidateRow" @closeModal="closeEditCandidateModal" />
       </div>
     </div>
   </div>
@@ -47,11 +49,10 @@ export default {
       this.candidates.splice(index, 1);
       this.saveCandidatesToLocalStorage();
     },
-    
-     updateCandidateRow(updatedCandidate) {
-      const index = this.candidates.findIndex((candidate) => candidate.id === updatedCandidate.id);
+    updateCandidateRow(candidateId, updatedCandidate) {
+      const index = this.candidates.findIndex((candidate) => candidate.id === candidateId);
       if (index !== -1) {
-        this.candidates[index] = updatedCandidate;
+        this.candidates[index] = { ...updatedCandidate };
         this.saveCandidatesToLocalStorage();
       }
     },
@@ -61,11 +62,10 @@ export default {
     closeAddCandidateModal() {
       this.showAddCandidateModal = false;
     },
-   
-  openEditCandidateModal(candidateData) {
-    this.selectedCandidateData = JSON.parse(JSON.stringify(candidateData)); // Create a copy
-    this.showEditCandidateModal = true;
-  },
+    openEditCandidateModal(candidateData) {
+      this.selectedCandidateData = { ...candidateData };
+      this.showEditCandidateModal = true;
+    },
     closeEditCandidateModal() {
       this.showEditCandidateModal = false;
       this.selectedCandidateData = null;
@@ -73,17 +73,25 @@ export default {
   },
 };
 </script>
-
 <style>
-/* Your CSS styles... */
-</style>
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
 
+.home-page {
+height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
 
-
-<style>
 #app {
-  max-width: 800px;
-  margin: 0 auto;
+  width: 100%; /* Set the width to 100% to take up the full width of the viewport */
+  height: 100%; /* Set the height to 100% to take up the full height of the viewport */
+  margin: 0;
   padding: 20px;
   font-family: Arial, sans-serif;
 }
@@ -97,26 +105,5 @@ button {
   margin: 10px 0;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
-
-th,
-td {
-  padding: 10px;
-  text-align: left;
-  border-bottom: 1px solid #ccc;
-}
-
-th {
-  background-color: #6495ed;
-  color: white;
-}
-
-tr:hover {
-  background-color: #f5f5f5;
-}
 </style>
 
