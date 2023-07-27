@@ -14,6 +14,9 @@
       <tr>
         <td>
           <label for="position">Select your Position:</label>
+          <div v-if="showAlert && !newCandidate.name.trim()" class="error-message">
+              Please fill candidate name.
+            </div>
         </td>
         <td>
           <select v-model="newCandidate.position" type="text" id="position" placeholder="Position" >
@@ -24,11 +27,17 @@
             <option value="Data Scientist">Data Scientist</option>
             <option value="Product Manager">Product Manager</option>
           </select>
+          <div v-if="showAlert && !newCandidate.position" class="error-message">
+              Please select a position.
+            </div>
         </td>
       </tr>
       <tr>
         <td>
           <label for="gender">Select your Gender:</label>
+          <div v-if="showAlert && !newCandidate.gender" class="error-message">
+              Please select a Gender.
+            </div>
         </td>
         <td>
           <label>
@@ -44,6 +53,9 @@
       <tr>
         <td>
           <label for="location">Enter your Location:</label>
+          <div v-if="showAlert && !newCandidate.location" class="error-message">
+              Please Enter your Location.
+            </div>
         </td>
         <td>
           <input v-model="newCandidate.location" type="text" id="location" placeholder="Location" r>
@@ -61,11 +73,6 @@
     <button type="submit">Add Candidate</button>
     <span class="close-btn" @click="closeEditCandidateModal">&times;</span> 
   </form>
-
-  <div v-if="showAlert" class="alert">
-    Please fill in all required fields.
-  </div>
-
 </template>
 
 <script>
@@ -112,8 +119,8 @@ export default {
       return isNameValid && isPositionValid && isGenderValid && isLocationValid && isExperienceValid;
     },
     closeEditCandidateModal() {
-      this.showAlert = false; // Hide the alert if it's shown.
-      this.$emit('closeModal'); // Emit the 'closeModal' event to notify the parent component.
+      this.showAlert = false; 
+      this.$emit('closeModal'); 
     },
   },
 };
@@ -131,9 +138,9 @@ export default {
   width: 80%;
   max-width: 600px;
   padding: 30px;
-  background-color: #f1f1f1; /* Light gray background color */
+  background-color: #f1f1f1; 
   border-radius: 2px;
-  z-index: 9999; /* Make sure the modal appears on top of other elements */
+  z-index: 9999; 
 }
 .close-btn {
   position: absolute;
@@ -141,17 +148,11 @@ export default {
   right: 10px;
   font-size: 24px;
   cursor: pointer;
-  color: #f00; /* Red color for the cross button */
-  /* You can also use other formats like "#ff0000" for red color */
+  color: #f00;  
 }
-
 .close-btn:hover {
-  color: #d00; /* Darker red color on hover */
+  color: #d00; 
 }
-
-
-
-
 .close-btn:hover {
   color: #333;
 }
@@ -197,5 +198,28 @@ button[type="submit"]:active,
 .button:active {
   background-color: #003f80;
 }
-</style>
+.error-message {
+  position: absolute;
+  top: 100%;
+  bottom: -20px;
+  left: 0;
+  font-size: 14px;
+  color: red;
 
+.alert {
+  
+  position: absolute;
+  top: 100%;
+  left: 0;
+  color: red;
+}
+#error-container {
+  position: relative;
+}
+#error-container .error-message {
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+}
+}
+</style>

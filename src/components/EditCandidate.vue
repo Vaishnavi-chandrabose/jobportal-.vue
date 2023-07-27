@@ -2,7 +2,6 @@
   <div>
     <h2>Edit Candidate</h2>
     <form @submit.prevent="updateCandidate">
-      <!-- form content -->
       <label for="name">Enter your Name:</label>
       <input v-model="candidate.name" type="text" id="name" placeholder="Name">
       <br>

@@ -20,13 +20,11 @@
           <td>{{ candidate.experience }}</td>
           <td>
             <DeleteCandidateButton @deleteCandidate="deleteCandidate(index)" />
-            <button @click="showEditModal(candidate, index)">Edit</button>
+            <button @click="showEditModal(candidate, index)">Update</button>
           </td>
         </tr>
       </tbody>
     </table>
-
-    <!-- Edit Candidate Modal -->
     <div v-if="showEditCandidateModal" class="modal">
       <div class="modal-content">
         <EditCandidate
