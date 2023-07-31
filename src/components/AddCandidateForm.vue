@@ -76,6 +76,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   data() {
     return {
@@ -86,16 +87,27 @@ export default {
         location: '',
         experience: '',
       },
-      showAlert: false, 
+      showAlert: false,
     };
   },
   methods: {
     addCandidate() {
       if (this.validateForm()) {
-        this.$emit('addCandidate', { ...this.newCandidate });
-        this.resetForm();
+        axios
+          .post(
+            'https://ap-south-1.aws.data.mongodb-api.com/app/data-fhzlj/endpoint/data/v1/action/insertOne',
+            this.newCandidate
+          )
+          .then((response) => {
+    console.log('Candidate added:', response.data);
+    this.$emit('addCandidate', response.data); // This line will emit an 'addCandidate' event, but it's not shown where it's used.
+    this.resetForm();
+  })
+  .catch((error) => {
+    console.error('Error adding candidate:', error);
+  });
       } else {
-        this.showAlert = true; 
+        this.showAlert = true;
       }
     },
     resetForm() {
@@ -107,20 +119,26 @@ export default {
         experience: '',
       };
       this.showAlert = false;
-       
     },
     validateForm() {
+      // Validation logic to check if all required fields are filled
       const isNameValid = this.newCandidate.name.trim() !== '';
       const isPositionValid = this.newCandidate.position !== '';
       const isGenderValid = this.newCandidate.gender !== '';
       const isLocationValid = this.newCandidate.location.trim() !== '';
-      const isExperienceValid = this.newCandidate.experience >= 0; 
+      const isExperienceValid = this.newCandidate.experience >= 0;
 
-      return isNameValid && isPositionValid && isGenderValid && isLocationValid && isExperienceValid;
+      return (
+        isNameValid &&
+        isPositionValid &&
+        isGenderValid &&
+        isLocationValid &&
+        isExperienceValid
+      );
     },
     closeEditCandidateModal() {
-      this.showAlert = false; 
-      this.$emit('closeModal'); 
+      this.showAlert = false;
+      this.$emit('closeModal'); // This line will emit a 'closeModal' event, but it's not shown where it's used.
     },
   },
 };
