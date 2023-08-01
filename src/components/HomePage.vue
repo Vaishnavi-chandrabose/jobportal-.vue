@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Home Page</h1>
-   <CandidateTable :candidates="candidates" @deleteCandidate="deleteCandidate" @openEditCandidateModal="openEditCandidateModal" />
+    <CandidateTable :candidates="candidates" @deleteCandidate="deleteCandidate" @openEditCandidateModal="openEditCandidateModal" />
     
     <button @click="showAddCandidateModal = true">Add Candidate</button>
     <div v-if="showAddCandidateModal" class="modal">
@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import { onMounted } from 'vue';
 import { usejobportal } from '@/stores/jobportal';
 import CandidateTable from '../components/CandidateTable.vue';
 import AddCandidateForm from '../components/AddCandidateForm.vue';
@@ -31,7 +32,11 @@ export default {
     EditCandidate,
   },
   setup() {
-    const { candidates, showAddCandidateModal, showEditCandidateModal, selectedCandidateData, addCandidate, deleteCandidate, updateCandidateRow } = usejobportal();
+    const { candidates, showAddCandidateModal, showEditCandidateModal, selectedCandidateData, addCandidate, deleteCandidate, updateCandidateRow, getJobs } = usejobportal();
+
+    onMounted(() => {
+      getJobs();
+    });
 
     const openEditCandidateModal = (candidateData) => {
       selectedCandidateData.value = { ...candidateData };
@@ -62,6 +67,7 @@ export default {
   },
 };
 </script>
+
 
 
 <style>

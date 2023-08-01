@@ -114,10 +114,6 @@ export const usejobportal = defineStore('jobportal', {
     },
   },
 
-  mounted() {
-    this.getJobs();
-  },
-
   methods: {
     resetForm() {
       this.job = {

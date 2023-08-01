@@ -27,39 +27,50 @@
     </table>
     <div v-if="showEditCandidateModal" class="modal">
       <div class="modal-content">
-        <EditCandidate :candidateData="selectedCandidateData" @updateCandidate="updateCandidateRow" @closeModal="closeEditCandidateModal" />
+        <EditCandidate
+          :candidateData="selectedCandidateData"
+          @updateCandidate="updateCandidateRow"
+          @closeModal="closeEditCandidateModal"
+        />
       </div>
     </div>
   </div>
 </template>
-<script>
-import { usejobportal } from '@/stores/jobportal';
-import DeleteCandidateButton from '@/components/DeleteCandidateButton.vue';
-import EditCandidate from '../components/EditCandidate.vue';
 
-export default {
+<script>
+import EditCandidate from '../components/EditCandidate.vue';
+import DeleteCandidateButton from '../components/DeleteCandidateButton.vue';
+import { defineComponent } from 'vue';
+import { usejobportal } from '../stores/jobportal';
+
+export default defineComponent({
   components: {
-    DeleteCandidateButton,
     EditCandidate,
+    DeleteCandidateButton,
   },
   setup() {
-    const { candidates, showEditCandidateModal, selectedCandidateData, deleteCandidate, updateCandidateRow } = usejobportal();
+    const {
+      candidates,
+      getJobs,
+      addCandidate,
+      deleteCandidate,
+      updateCandidateRow,
+      showEditCandidateModal,
+      selectedCandidateData,
+    } = usejobportal();
 
-    const showEditModal = (candidateData, index) => {
-      selectedCandidateData.value = { ...candidateData };
-      showEditCandidateModal.value = true;
-    };
+    getJobs(); // Call getJobs to fetch data from MongoDB
 
     return {
       candidates,
-      showEditCandidateModal,
-      selectedCandidateData,
+      addCandidate,
       deleteCandidate,
       updateCandidateRow,
-      showEditModal,
+      showEditCandidateModal,
+      selectedCandidateData,
     };
   },
-};
+});
 </script>
 
 <style>
