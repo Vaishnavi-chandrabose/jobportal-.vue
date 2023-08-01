@@ -27,71 +27,44 @@
     </table>
     <div v-if="showEditCandidateModal" class="modal">
       <div class="modal-content">
-        <EditCandidate
-          :candidateData="selectedCandidateData"
-          @updateCandidate="updateCandidateRow"
-          @closeModal="closeEditCandidateModal"
-        />
+        <EditCandidate :candidateData="selectedCandidateData" @updateCandidate="updateCandidateRow" @closeModal="closeEditCandidateModal" />
       </div>
     </div>
   </div>
 </template>
-
 <script>
-import DeleteCandidateButton from './DeleteCandidateButton.vue';
-import EditCandidate from './EditCandidate.vue';
+import { usejobportal } from '@/stores/jobportal';
+import DeleteCandidateButton from '@/components/DeleteCandidateButton.vue';
+import EditCandidate from '../components/EditCandidate.vue';
 
 export default {
-  props: {
-    candidates: {
-      type: Array,
-      required: true,
-    },
-  },
   components: {
     DeleteCandidateButton,
     EditCandidate,
   },
-  data() {
-    return {
-      showEditCandidateModal: false,
-      selectedCandidateData: null,
-      selectedCandidateIndex: null,
+  setup() {
+    const { candidates, showEditCandidateModal, selectedCandidateData, deleteCandidate, updateCandidateRow } = usejobportal();
+
+    const showEditModal = (candidateData, index) => {
+      selectedCandidateData.value = { ...candidateData };
+      showEditCandidateModal.value = true;
     };
-  },
-  methods: {
-    deleteCandidate(index) {
-      this.$emit('deleteCandidate', index);
-    },
-    showEditModal(candidateData, index) {
-      this.selectedCandidateData = { ...candidateData };
-      this.selectedCandidateIndex = index;
-      this.showEditCandidateModal = true;
-    },
-    updateCandidateRow(updatedCandidate) {
-      this.candidates[this.selectedCandidateIndex] = { ...updatedCandidate };
-      this.saveCandidatesToLocalStorage();
-      this.closeEditCandidateModal();
-    },
-    saveCandidatesToLocalStorage() {
-      localStorage.setItem('candidates', JSON.stringify(this.candidates));
-    },
-    closeEditCandidateModal() {
-      this.showEditCandidateModal = false;
-      this.selectedCandidateData = null;
-      this.selectedCandidateIndex = null;
-    },
+
+    return {
+      candidates,
+      showEditCandidateModal,
+      selectedCandidateData,
+      deleteCandidate,
+      updateCandidateRow,
+      showEditModal,
+    };
   },
 };
 </script>
 
-
-
-
 <style>
-.fulwidth{
- width:1500px;
-
+.fulwidth {
+  width: 1500px;
 }
 
 th,
