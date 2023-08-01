@@ -27,30 +27,28 @@
     </table>
     <div v-if="showEditCandidateModal" class="modal">
       <div class="modal-content">
-        <EditCandidate
-          :candidateData="selectedCandidateData"
-          @updateCandidate="updateCandidateRow"
-          @closeModal="closeEditCandidateModal"
-        />
+        <EditCandidate :candidateData="selectedCandidateData" @updateCandidate="updateCandidateRow" @closeModal="closeEditCandidateModal" />
       </div>
     </div>
   </div>
 </template>
-
 <script>
 import EditCandidate from '../components/EditCandidate.vue';
 import DeleteCandidateButton from '../components/DeleteCandidateButton.vue';
 import { defineComponent } from 'vue';
 import { usejobportal } from '../stores/jobportal';
+import { ref, onMounted } from 'vue';
 
-export default defineComponent({
-  components: {
-    EditCandidate,
-    DeleteCandidateButton,
+export default {
+  props: {
+    candidates: {
+      type: Array,
+      required: true,
+    },
   },
   setup() {
     const {
-      candidates,
+      candidates = ref([]),
       getJobs,
       addCandidate,
       deleteCandidate,
@@ -59,7 +57,7 @@ export default defineComponent({
       selectedCandidateData,
     } = usejobportal();
 
-    getJobs(); // Call getJobs to fetch data from MongoDB
+    getJobs();
 
     return {
       candidates,
@@ -70,7 +68,7 @@ export default defineComponent({
       selectedCandidateData,
     };
   },
-});
+};
 </script>
 
 <style>
